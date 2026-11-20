@@ -1,44 +1,78 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>XenRemote - Google Play</title>
 
   <script>
-    // Read the shop ID from the URL hash (e.g., #shop1 -> "shop1")
-    // If someone opens the link with no hash, it defaults to "direct"
     var rawTag = window.location.hash.replace("#", "").trim().toLowerCase();
     var shopId = rawTag.replace(/[^a-z0-9_-]/g, "") || "direct";
 
-    // 1. Tell GoatCounter which specific shop scanned the QR
+    // Tell GoatCounter which shop or channel scanned the link
     window.goatcounter = {
       path: "/DownloadXenRemote-" + shopId,
       title: "DownloadXenRemote (" + shopId + ")"
     };
 
-    // 2. Build the Play Store URL with that specific shop's UTM campaign
+    // Use source="instagram" if hash is #insta or #ig, otherwise "shop_qr"
+    var source = (shopId === "insta" || shopId === "ig") ? "instagram" : "shop_qr";
+    var medium = (source === "instagram") ? "social" : "offline";
+
     var PACKAGE = "com.nextgenapp.xenremote";
-    var utm = "&utm_source=shop_qr&utm_medium=offline&utm_campaign=" + shopId;
+    var utm = "&utm_source=" + source + "&utm_medium=" + medium + "&utm_campaign=" + shopId;
     var playStoreUrl = "https://play.google.com/store/apps/details?id=" + PACKAGE + utm;
 
-    // 3. Redirect after 400ms so GoatCounter finishes logging the scan
-    setTimeout(function() {
+    var redirected = false;
+    function goToStore() {
+      if (redirected) return;
+      redirected = true;
       window.location.replace(playStoreUrl);
-    }, 1500);
+    }
+
+    // Redirect after 1200ms so GoatCounter finishes counting on slower mobile networks
+    setTimeout(goToStore, 1200);
   </script>
 
-  <!-- Replace YOUR_CODE with your GoatCounter site code -->
-  <script data-goatcounter="https://YOUR_CODE.goatcounter.com/count"
+  <!-- Replace YOUR_CODE with your actual GoatCounter site code -->
+  <script data-goatcounter="https://nextgenappcreator.goatcounter.com/count"
           async src="//gc.zgo.at/count.js"></script>
+
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      color: #202124;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 12px 24px;
+      background: #01875f;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+  </style>
 </head>
 <body>
-  <p style="font-family: sans-serif; text-align: center; margin-top: 50px;">
-    Opening XenRemote Play... <br><br>
-    <a id="fallback" href="#">Tap here to install XenRemote</a>
-  </p>
+  <p>Opening <strong>XenRemote</strong> on Google Play...</p>
+  <a id="fallback" class="btn" href="#">Open Google Play Store</a>
+
   <script>
-    document.getElementById("fallback").href = playStoreUrl;
+    var btn = document.getElementById("fallback");
+    btn.href = playStoreUrl;
+    btn.addEventListener("click", function () {
+      redirected = true;
+    });
   </script>
 </body>
 </html>
