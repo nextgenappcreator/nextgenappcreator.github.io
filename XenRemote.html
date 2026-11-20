@@ -76,9 +76,11 @@ footer{margin-top:44px;color:var(--muted);font-size:13px}
 <script>
 // Put your app's package name here, e.g. "com.nextgenapp.xenremote"
 var PACKAGE = "com.nextgenapp.xenremote";
-var url = PACKAGE
-  ? "https://play.google.com/store/apps/details?id=" + PACKAGE
-  : "https://play.google.com/store/search?q=XenRemote%20TV%20Box&c=apps";
+var utmQuery = "&utm_source=github&utm_medium=online&utm_campaign=githublink";
+
+var baseUrl = "https://play.google.com/store/apps/details?id=" + PACKAGE; 
+
+var url = baseUrl + utmQuery;
 document.getElementById("dl").href = url;
 document.getElementById("dl2").href = url;
 </script>
