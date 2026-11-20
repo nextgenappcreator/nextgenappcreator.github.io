@@ -1,34 +1,41 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Opening XenRemote...</title>
-  <!-- GoatCounter Analytics -->
- <script data-goatcounter="https://nextgenappcreator.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
+  <title>XenRemote - Google Play</title>
+
   <script>
-    const PACKAGE = "com.nextgenapp.xenremote";
-    const playStoreUrl =
-      "https://play.google.com/store/apps/details?id=" +
-      PACKAGE +
-      "&utm_source=insta&utm_medium=online&utm_campaign=nextgeninstapage";
+    // Read the shop ID from the URL hash (e.g., #shop1 -> "shop1")
+    // If someone opens the link with no hash, it defaults to "direct"
+    var rawTag = window.location.hash.replace("#", "").trim().toLowerCase();
+    var shopId = rawTag.replace(/[^a-z0-9_-]/g, "") || "direct";
 
-    // Redirect after allowing analytics to load
-    setTimeout(function () {
+    // 1. Tell GoatCounter which specific shop scanned the QR
+    window.goatcounter = {
+      path: "/xenremote-" + shopId,
+      title: "XenRemote (" + shopId + ")"
+    };
+
+    // 2. Build the Play Store URL with that specific shop's UTM campaign
+    var PACKAGE = "com.nextgenapp.xenremote";
+    var utm = "&utm_source=shop_qr&utm_medium=offline&utm_campaign=" + shopId;
+    var playStoreUrl = "https://play.google.com/store/apps/details?id=" + PACKAGE + utm;
+
+    // 3. Redirect after 400ms so GoatCounter finishes logging the scan
+    setTimeout(function() {
       window.location.replace(playStoreUrl);
-    }, 1500);
+    }, 1000);
   </script>
+
+  <!-- Replace YOUR_CODE with your GoatCounter site code -->
+  <script data-goatcounter="https://YOUR_CODE.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
 </head>
-
 <body>
-  <p style="font-family:Arial,sans-serif;text-align:center;margin-top:50px">
-    Opening XenRemote on Google Play...
-    <br><br>
-    <a id="fallback" href="#">Tap here if you are not redirected</a>
+  <p style="font-family: sans-serif; text-align: center; margin-top: 50px;">
+    Opening XenRemote Play... <br><br>
+    <a id="fallback" href="#">Tap here to install XenRemote</a>
   </p>
-
   <script>
     document.getElementById("fallback").href = playStoreUrl;
   </script>
